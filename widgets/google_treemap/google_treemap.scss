@@ -1,0 +1,27 @@
+// ----------------------------------------------------------------------------
+// Sass declarations
+// ----------------------------------------------------------------------------
+$background-color: #12b0c5;
+
+// ----------------------------------------------------------------------------
+// Widget-GoogleGauge styles
+// ----------------------------------------------------------------------------
+.widget-google-treemap {
+
+    background-color: $background-color;
+    position: relative;
+
+    .chart {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+    }
+
+    text {
+        fill: white !important;
+        font-family: "Open Sans", sans-serif !important;
+    }
+
+}

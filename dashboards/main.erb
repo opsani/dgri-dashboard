@@ -1,0 +1,56 @@
+<script type='text/javascript'>
+$(function() {
+  Dashing.numColumns = 5
+});
+</script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["treemap"]});
+</script>
+
+
+<% content_for :title do %>Datagrid dashboard<% end %>
+<div class="gridster">
+  <ul>
+
+    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="vulnerable_systems" data-view="Dgrinumber" data-title="Systems needing update" data-suffixs="Total vulnerable systems" style="background-color:red;"></div>
+    </li>
+
+    <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
+      <div data-id="vuln_fixable" data-view="Dgrinumber" data-suffixs="New from past week" data-title="Vulns with a fix" style="background-color:red;"></div>
+    </li>
+
+
+    <li data-row="1" data-col="2" data-sizex="1" data-sizey="1">
+      <div data-id="n_new_vulns" data-view="Number" data-title="New Vulns" data-moreinfo="New vulns from the past week"></div>
+    </li>
+
+    <li data-row="2" data-col="2" data-sizex="1" data-sizey="1">
+      <div data-id="top_new_vulns" data-view="List" data-unordered="true" data-title="Top New Vulns" data-moreinfo="New vulns from the past week with severity / number of affected systems" style="background-color:#47bbb3;"></div>
+    </li>
+
+
+    <li data-row="1" data-col="3" data-sizex="1" data-sizey="1">
+      <div data-id="n_vulns" data-view="Number" data-title="Total Vulns" data-moreinfo="Number of vulns across all systems" style="background-color:#12b0c5"></div>
+    </li>
+
+    <li data-row="2" data-col="3" data-sizex="1" data-sizey="1">
+      <div data-id="vulns_breakdown" data-view="List" data-unordered="true" data-title="Vuln breakdown" data-moreinfo="Breakdown of all vulns by severity"></div>
+    </li>
+
+
+    <li data-row="1" data-col="4" data-sizex="1" data-sizey="1">
+      <div data-id="active_systems" data-view="Dgrinumber2" data-title="Active Systems" data-moreinfo="Active systems / Change from last week" style="background-color:#96bf48;"></div>
+    </li>
+
+    <li data-row="2" data-col="4" data-sizex="1" data-sizey="1">
+      <div data-id="os_breakdown" data-view="GoogleTreemap"  data-title="Systems by OS" ></div>
+    </li>
+
+
+
+
+  </ul>
+</div>
