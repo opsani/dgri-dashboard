@@ -211,11 +211,31 @@ class Dgri
         return { count: data.size, items: ret }
     end
 
+    def get_crit_vulns()
+        data = { sys: 0, vuln: 0 }
+
+        if not ENV["DGRI_CRIT_VULNS"]
+            return data
+        end
+
+        url = URI.parse("#{@url}/vulns?view=count&vuln.id=#{ENV["DGRI_CRIT_VULNS"]}")
+        data[:vuln] = api_request url, false
+
+        url = URI.parse("#{@url}/systems?view=count&vuln.id=#{ENV["DGRI_CRIT_VULNS"]}")
+        data[:sys] = api_request url, false
+
+        return data
+    end
+
     def get_stats()
 
       new_vulns = get_new_vulns
       vulns = get_vulns
       active_sys = get_active_sys
+      crit_vulns = get_crit_vulns
+
+      vulns[:items].unshift({ label: "Critical", value: crit_vulns[:vuln] })
+
       stats = {
         active_systems: {
           current: active_sys[:current],
@@ -227,11 +247,13 @@ class Dgri
         n_vulns: { current: vulns[:all] },
         vulns_breakdown: { items: vulns[:items] },
         vuln_fixable: { big: get_fixable_vulns, small: get_fixable_vulns(7)},
+        critical_vulns: { big:  crit_vulns[:vuln], small: crit_vulns[:sys]},
 
         vulnerable_systems: {
           big:  get_vuln_systems(true),
           small: get_vuln_systems(false)
         },
+
       }
 
       return stats
@@ -251,10 +273,10 @@ SCHEDULER.every "#{INTERVAL}m", :first_in => 0 do |job|
     dgri = Dgri.new DGRI_URL, DGRI_USERNAME, DGRI_PASSWORD
 
 
-    #start = Time.now
+    start = Time.now
     stats = dgri.get_stats
 
-    # STDERR.puts Time.now - start
+    STDERR.puts Time.now - start
     STDERR.puts stats
 
     stats.keys.each do |key|

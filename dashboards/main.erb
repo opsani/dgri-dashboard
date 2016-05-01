@@ -15,17 +15,17 @@ $(function() {
   <ul>
 
     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-      <div data-id="vulnerable_systems" data-view="Dgrinumber" data-title="Systems needing update" data-suffixs="Total vulnerable systems" style="background-color:red;"></div>
+      <div data-id="critical_vulns" data-view="Dgrinumber" data-title="Critical Vulns" data-suffixs="Systems affected" data-addclass-status-warning="isCritical" style="background-color:#96bf48;"></div>
     </li>
 
     <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-      <div data-id="vuln_fixable" data-view="Dgrinumber" data-suffixs="New from past week" data-title="Vulns with a fix" style="background-color:red;"></div>
-    </li>
-
-
-    <li data-row="1" data-col="2" data-sizex="1" data-sizey="1">
       <div data-id="n_new_vulns" data-view="Number" data-title="New Vulns" data-moreinfo="New vulns from the past week"></div>
     </li>
+
+    <li data-row="1" data-col="2" data-sizex="1" data-sizey="1">
+      <div data-id="vulnerable_systems" data-view="Dgrinumber" data-title="Systems needing update" data-suffixs="Total vulnerable systems" data-addclass-attention="isCritical"></div>
+    </li>
+
 
     <li data-row="2" data-col="2" data-sizex="1" data-sizey="1">
       <div data-id="top_new_vulns" data-view="List" data-unordered="true" data-title="Top New Vulns" data-moreinfo="New vulns from the past week with severity / number of affected systems" style="background-color:#47bbb3;"></div>
@@ -33,8 +33,9 @@ $(function() {
 
 
     <li data-row="1" data-col="3" data-sizex="1" data-sizey="1">
-      <div data-id="n_vulns" data-view="Number" data-title="Total Vulns" data-moreinfo="Number of vulns across all systems" style="background-color:#12b0c5"></div>
+      <div data-id="vuln_fixable" data-view="Dgrinumber" data-suffixs="New from past week" data-title="Vulns with a fix" data-addclass-attention="isCritical" ></div>
     </li>
+
 
     <li data-row="2" data-col="3" data-sizex="1" data-sizey="1">
       <div data-id="vulns_breakdown" data-view="List" data-unordered="true" data-title="Vuln breakdown" data-moreinfo="Breakdown of all vulns by severity"></div>

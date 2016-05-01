@@ -3,6 +3,9 @@ class Dashing.Dgrinumber extends Dashing.Widget
 
   @accessor 'small', Dashing.AnimatedValue
 
+  @accessor 'isCritical', ->
+    @get('big') > 0
+
   onData: (data) ->
     if data.status
       # clear existing "status-*" classes
