@@ -105,7 +105,7 @@ class Dgri
         os = {}
         # Get OS breakdown from config id
         for system in current
-            config_id = system["config_id"]
+            config_id = system["config_id"] || "unknown-"
             os_name, os_ver, _ = config_id.split('-')
             os_full_name = "#{os_name} #{os_ver}"
 
