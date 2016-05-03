@@ -35,5 +35,6 @@ docker run                                                     \
     -v=$(pwd)/dashboards:/dashboards                           \
     -v=$(pwd)/jobs:/jobs                                       \
     -v=$(pwd)/config:/config                                   \
+    -v=$(pwd)/public/favicon.ico:/public/favicon.ico           \
     frvi/dashing
 ```
