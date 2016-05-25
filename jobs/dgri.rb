@@ -39,7 +39,8 @@ class Dgri
 
       data = {
         sev10: 0,
-        sev7: 0,
+        sev9: 0,
+        sev8: 0,
         sev5: 0,
         all: 0,
       }
@@ -54,8 +55,12 @@ class Dgri
             data[:sev5] += 1
           end
 
-          if sev >=7
-            data[:sev7] += 1
+          if sev >=8
+            data[:sev8] += 1
+          end
+
+          if sev >=9
+            data[:sev9] += 1
           end
 
           if sev == 10
@@ -66,14 +71,20 @@ class Dgri
 
       return {
         all: data[:all],
+        data: vulns,
+        crit: data[:sev10],
         items: [
             {
-                "label" => "Severity 10",
+                "label" => "Critical (Severity 10)",
                 "value" => data[:sev10]
             },
             {
-                "label" => "Severity 7+",
-                "value" => data[:sev7]
+                "label" => "Severity 9+",
+                "value" => data[:sev9]
+            },
+            {
+                "label" => "Severity 8+",
+                "value" => data[:sev8]
             },
             {
                 "label" => "Severity 5+",
@@ -89,7 +100,12 @@ class Dgri
     end
 
     def get_active_sys()
+
         day_active = 3
+        if ENV["DGRI_DAYS_ACTIVE"] != nil and ENV["DGRI_DAYS_ACTIVE"] != "None"
+            day_active = ENV["DGRI_DAYS_ACTIVE"].to_i
+        end
+
         days_last  = 7
 
         date_last_signal  = DateTime.now - day_active
@@ -118,8 +134,6 @@ class Dgri
             else
                 os[os_name][os_full_name] = 1
             end
-            # STDERR.puts os_name
-            # STDERR.puts os_ver
         end
 
         by_os = [
@@ -141,8 +155,8 @@ class Dgri
         return { current: current.size, last: last, by_os: by_os }
     end
 
-    def get_vuln_systems(fixable=false)
-      url_str = "#{@url}/systems?vuln.severity=min:0&view=count"
+    def get_vuln_systems(fixable=false, severity=0)
+      url_str = "#{@url}/systems?vuln.severity=min:#{severity}&view=count"
 
       if fixable
         url_str += "&vuln.fixes=full"
@@ -153,7 +167,7 @@ class Dgri
 
     end
 
-    def get_fixable_vulns(since=nil)
+    def get_fixable_vulns(since=nil, severity=nil)
       url_str = "#{@url}/vulns?vuln.fixes=full&view=count"
 
       if since != nil
@@ -161,14 +175,18 @@ class Dgri
         url_str += "&vuln.changed=min:#{changed}"
       end
 
+      if severity != nil
+        url_str += "&vuln.severity=min:#{severity}"
+      end
+
       url = URI.parse(url_str)
       return api_request url, false
     end
 
-    def get_new_vulns(since=nil, count=5)
+    def get_top_vulns(data=nil, since=nil, count=5)
         since ||= DateTime.now - 7
         url = URI.parse("#{@url}/vulns?vuln.changed=min:#{since}")
-        data = api_request url
+        data ||= api_request url
 
         sorted = data.sort {
             |a, b|
@@ -208,46 +226,37 @@ class Dgri
             }
         end
 
-        return { count: data.size, items: ret }
-    end
-
-    def get_crit_vulns()
-        data = { sys: 0, vuln: 0 }
-
-        if not ENV["DGRI_CRIT_VULNS"]
-            return data
-        end
-
-        url = URI.parse("#{@url}/vulns?view=count&vuln.id=#{ENV["DGRI_CRIT_VULNS"]}")
-        data[:vuln] = api_request url, false
-
-        url = URI.parse("#{@url}/systems?view=count&vuln.id=#{ENV["DGRI_CRIT_VULNS"]}")
-        data[:sys] = api_request url, false
-
-        return data
+        return { items: ret, total: data.size }
     end
 
     def get_stats()
 
-      new_vulns = get_new_vulns
       vulns = get_vulns
       active_sys = get_active_sys
-      crit_vulns = get_crit_vulns
 
-      vulns[:items].unshift({ label: "Critical", value: crit_vulns[:vuln] })
+      top_new_vulns = get_top_vulns
+      top_new_vulns[:items].push({
+          label: "Total New Vulns",
+          value: top_new_vulns[:total]})
+
+      top_vulns = get_top_vulns(vulns[:data], "0", 6)
 
       stats = {
         active_systems: {
           current: active_sys[:current],
           last: active_sys[:last]
         } ,
-        os_breakdown: { items: get_active_sys[:by_os] },
-        top_new_vulns: { items: new_vulns[:items] },
-        n_new_vulns: { current: new_vulns[:count] },
+        os_breakdown: { items: active_sys[:by_os] },
+        top_new_vulns: { items: top_new_vulns[:items]},
+        top_vulns: { items: top_vulns[:items]},
         n_vulns: { current: vulns[:all] },
         vulns_breakdown: { items: vulns[:items] },
-        vuln_fixable: { big: get_fixable_vulns, small: get_fixable_vulns(7)},
-        critical_vulns: { big:  crit_vulns[:vuln], small: crit_vulns[:sys]},
+        vuln_fixable: {
+          big: get_fixable_vulns(nil, 10),
+          small: get_fixable_vulns},
+        critical_vulns: {
+          big: vulns[:crit],
+          small: get_vuln_systems(false, 10)},
 
         vulnerable_systems: {
           big:  get_vuln_systems(true),

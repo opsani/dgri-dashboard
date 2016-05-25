@@ -19,21 +19,19 @@ $(function() {
     </li>
 
     <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-      <div data-id="n_new_vulns" data-view="Number" data-title="New Vulns" data-moreinfo="New vulns from the past week"></div>
+      <div data-id="top_new_vulns" data-view="List" data-unordered="true" data-title="Top New Vulns" data-moreinfo="New vulns from the past week with severity / number of affected systems" style="padding-top: 0px;background-color:#47bbb3;"></div>
     </li>
 
     <li data-row="1" data-col="2" data-sizex="1" data-sizey="1">
-      <div data-id="vulnerable_systems" data-view="Dgrinumber" data-title="Systems needing update" data-suffixs="Total vulnerable systems" data-addclass-attention="isCritical"></div>
+      <div data-id="vuln_fixable" data-view="Dgrinumber" data-suffixs="Total  Vulns with a fix" data-title="Critical Vulns \w fix" data-addclass-danger="isCritical" ></div>
     </li>
-
 
     <li data-row="2" data-col="2" data-sizex="1" data-sizey="1">
-      <div data-id="top_new_vulns" data-view="List" data-unordered="true" data-title="Top New Vulns" data-moreinfo="New vulns from the past week with severity / number of affected systems" style="background-color:#47bbb3;"></div>
+      <div data-id="top_vulns" data-view="List" data-unordered="true" data-title="Top Vulns" data-moreinfo="Top vulns with severity / number of affected systems" style="padding-top: 0px;"></div>
     </li>
 
-
     <li data-row="1" data-col="3" data-sizex="1" data-sizey="1">
-      <div data-id="vuln_fixable" data-view="Dgrinumber" data-suffixs="New from past week" data-title="Vulns with a fix" data-addclass-attention="isCritical" ></div>
+      <div data-id="vulnerable_systems" data-view="Dgrinumber" data-title="Systems needing update" data-suffixs="Total vulnerable systems" data-addclass-attention="isCritical"></div>
     </li>
 
 
