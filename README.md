@@ -30,6 +30,7 @@ docker run                                                     \
     --hostname dgri-dashing                                    \
     -v=$(pwd)/widgets/dgrinumber/:/widgets/dgrinumber          \
     -v=$(pwd)/widgets/dgrinumber2/:/widgets/dgrinumber2        \
+    -v=$(pwd)/widgets/dgrilist/:/widgets/dgrilist              \
     -v=$(pwd)/widgets/google_treemap/:/widgets/google_treemap  \
     -v=$(pwd)/dashboards:/dashboards                           \
     -v=$(pwd)/jobs:/jobs                                       \
