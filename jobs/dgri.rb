@@ -227,8 +227,8 @@ class Dgri
 
         data_sorted = data_cutoff.sort {
             |a, b|
-            [a['severity'].to_f, a["n_affected"]] <=>
-            [b['severity'].to_f, b["n_affected"]]
+            [a['severity'].to_f, a["n_affected"].to_i] <=>
+            [b['severity'].to_f, b["n_affected"].to_i]
         }.reverse
 
         ret=[]
