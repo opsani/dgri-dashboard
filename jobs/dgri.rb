@@ -11,6 +11,8 @@ class Dgri
         @url      = apiUrl
         @username = username
         @password = password
+
+        @cve_info_cache = {}
     end
 
     def api_request(url, parse=true)
@@ -183,6 +185,20 @@ class Dgri
       return api_request url, false
     end
 
+    def get_vuln_info(cve)
+
+      if @cve_info_cache.key?(cve)
+        return @cve_info_cache[cve]
+      end
+
+      url_str = "#{@url}/vulns/#{cve}"
+      url = URI.parse(url_str)
+      resp = api_request url
+      desc = resp["description"]
+      @cve_info_cache[cve] = desc
+      return desc
+    end
+
     def get_top_vulns(data=nil, since=nil, count=5)
         since ||= DateTime.now - 7
         url = URI.parse("#{@url}/vulns?vuln.changed=min:#{since}")
@@ -220,8 +236,12 @@ class Dgri
             if idx >= count
                 break
             end
+
+            cve_id = data_sorted[idx]['id']
+            desc = get_vuln_info(cve_id)
+
             ret[idx] = {
-                label: data_sorted[idx]["id"],
+                label: "<a target='_blank' title='#{desc}' href='https://web.nvd.nist.gov/view/vuln/detail?vulnId=#{cve_id}'>#{cve_id}</a>",
                 value: "#{data_sorted[idx]['severity']}  x#{data_sorted[idx]['n_affected']}"
             }
         end
